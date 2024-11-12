@@ -5,7 +5,7 @@
             <div class="w-full px-3 pt-5 pb-8 relative">
                 <div class="w-full">
                     <div class="flex justify-center items-center">
-                        <img src="../assets/login/logo_ilearnify.png" alt="" class="w-[8rem] rounded-md">
+                        <img src="../assets/login/logo_precisogps.png" alt="" class="w-[8rem] rounded-md">
                     </div>
                     <!-- <span class="md:hidden lg:block title_empresa text-center pt-3"> {{ empresa }} </span> -->
                 </div>
@@ -36,10 +36,36 @@ export default {
         navItems.value = [
             {
                 to: "/home",
-                label: "Home",
+                label: "Inicio",
                 children: [],
                 icon: "mdi mdi-home"
             },
+            {
+                to: "/route",
+                label: "Rutas",
+                children: [],
+                icon: "mdi mdi-road-variant"
+            },
+            {
+                to: "/stop",
+                label: "Paradas",
+                children: [],
+                icon: "mdi mdi-map-marker"
+            },
+            {
+                to: "/office",
+                label: "Despachos",
+                children: [],
+                icon: "mdi mdi-office-building"
+            },
+            {
+                to: "/vehicle",
+                label: "Vehículos",
+                children: [],
+                icon: "mdi mdi-truck"
+            }
+
+
         ]
         return { navItems };
     },
@@ -48,97 +74,53 @@ export default {
 <style lang="scss">
 .sidebarComponent {
     max-height: 100vh;
-    /* Establece la altura máxima al 100% del viewport height */
     box-shadow: 1px 0px 5px 1px rgba(117, 117, 117, 0.09);
-    -webkit-box-shadow: 1px 0px 5px 1px rgba(117, 117, 117, 0.09);
-    -moz-box-shadow: 1px 0px 5px 1px rgba(117, 117, 117, 0.09);
+    background-color: #ffffff; // Fondo blanco para un look limpio
 }
 
-.loader {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    position: relative;
-    animation: rotate 1s linear infinite
-}
+.open_close_sidebar i {
+    color: #ec2121; // Rojo para la flecha en su estado normal
+    transition: color 0.3s ease, transform 0.3s ease;
 
-.loader::before,
-.loader::after {
-    content: "";
-    box-sizing: border-box;
-    position: absolute;
-    inset: 0px;
-    border-radius: 50%;
-    border: 5px solid #FFF;
-    animation: prixClipFix 2s linear infinite;
-}
-
-.loader::after {
-    inset: 8px;
-    transform: rotate3d(90, 90, 0, 180deg);
-    border-color: #FF3D00;
-}
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg)
+    &:hover {
+        color: #ffcd00; // Cambia a amarillo en hover
     }
-
-    100% {
-        transform: rotate(360deg)
-    }
-}
-
-@keyframes prixClipFix {
-    0% {
-        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
-    }
-
-    50% {
-        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
-    }
-
-    75%,
-    100% {
-        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
-    }
-}
-
-
-.overflay {
-    height: 100%;
-    width: 100vw;
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    right: 0;
-    left: 0;
-    background-color: #9191918f;
-    z-index: 9999;
 }
 
 .sidebar {
+    background-color: #ffffff; // Fondo blanco
+    color: #333333; // Texto en gris oscuro
     overflow: hidden;
     transition: 300ms;
-    background-color: var(--fondosidebar);
 
     .button-link span {
         transition: all 0.3s;
     }
 
     .btn-logout {
-        background-color: #517ee0;
+        background-color: #ec2121; // Rojo para el botón de logout
+        color: #ffffff;
         transition: all 0.5s;
 
         &:hover {
-            background-color: #1e53c5;
-            ;
+            background-color: #ffcd00; // Cambia a amarillo en hover
+            color: #333333;
+        }
+    }
+
+    .button-link {
+        color: #333333;
+        font-weight: 500;
+
+        &.router-link-exact-active {
+            color: #ec2121 !important; // Rojo para enlaces activos
+
+            i {
+                color: #ec2121 !important;
+            }
         }
     }
 }
-
 
 .side-bar-visible {
     width: 230px !important;
@@ -157,8 +139,8 @@ export default {
         display: block;
         font-size: 17px;
         font-weight: 500;
+        color: #ec2121; // Rojo para el título de la empresa
     }
-
 }
 
 .side-bar-close {
@@ -169,15 +151,6 @@ export default {
         display: none;
     }
 
-    .btn-logout {
-        transition: all 0.6s;
-        overflow: hidden;
-
-        span {
-            transition: all 0.6s;
-        }
-    }
-
     .open_close_sidebar {
         position: fixed;
         top: 2.6rem;
@@ -185,28 +158,27 @@ export default {
         height: 25px;
         z-index: 9999;
         transform: rotate(180deg);
+        color: #ec2121;
         transition: 300ms;
+
+        &:hover {
+            color: #ffcd00; // Amarillo en hover
+        }
     }
 
     .button-link {
-        .icono_arrow {
-            font-size: 10px;
-            padding-left: 5px;
-        }
-
         justify-content: center;
 
         i {
-            color: rgb(184, 184, 184);
+            color: #ffcd00; // Íconos en amarillo para dar contraste
             font-size: 19px;
-            margin-right: 0;
         }
 
         &.router-link-exact-active {
-            color: #0b46c4 !important;
+            color: #ec2121 !important;
 
             i {
-                color: #0b46c4 !important;
+                color: #ec2121 !important; // Ícono en rojo cuando está activo
             }
         }
     }

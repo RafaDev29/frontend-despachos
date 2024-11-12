@@ -5,7 +5,7 @@
                 <img src="../assets/login/logo_precisogps.png" class="animation a6 pb-10"
                     style="margin: 0 auto 10px;width: 220px">
                 <div class="flex justify-center">
-                    <FormLoginVue @validate-credentials="onValidateCredentials"/>
+                    <FormLoginVue @validate-credentials="onValidateCredentials" />
                 </div>
             </div>
         </div>
@@ -30,38 +30,40 @@ import FormLoginVue from "@/components/FormLogin.vue";
 import { ref } from 'vue';
 
 export default ({
-    components: { FormLoginVue},
+    components: { FormLoginVue },
     setup() {
         const router = useRouter();
         const dialogLoader = ref(false);
 
         const onValidateCredentials = async (data) => {
-            await loginApi(data.username, data.password)
-                .then(response => {
-                    if (response.data.status == true) {
-                        const user = response.data.data.user;
-                        store.commit('setUsuario', user.username);
-                        store.commit('setToken', response.data.data.token);
-                        store.commit('setIsAuthenticated', true);
-                        router.push('/home');
+            dialogLoader.value = true;
+            try {
+                const response = await loginApi(data.username, data.password);
+                if (response.data.status) {  
+                    const user = response.data.data;
+                    store.commit('setUsuario', user.username);
+                    store.commit('setToken', user.token); 
+                    store.commit('setIsAuthenticated', true);
+                    router.push('/home');
+                } else {
+                    basicAlert(() => { }, 'warning', 'Credenciales incorrectas', 'Verifique su usuario y contraseña');
+                }
+            } catch (error) {
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        basicAlert(() => { }, 'warning', 'Credenciales incorrectas', 'Verifique su usuario y contraseña');
+                    } else if (error.response.status === 400) {
+                        basicAlert(() => { }, 'error', 'Solicitud incorrecta', 'Los datos proporcionados no son válidos');
                     } else {
-                        basicAlert(() => { }, 'warning', 'Credenciales incorrectas', 'Verifique su usuario y contraseña')
-                    }
-                })
-                .catch(error => {
-                    if (error.response) {
-                        if (error.response.status === 401) {
-                            basicAlert(() => { }, 'warning', 'Credenciales incorrectas', 'Verifique su usuario y contraseña');
-                        } else if (error.response.status === 400) {
-                            basicAlert(() => { }, 'error', 'Solicitud incorrecta', 'Los datos proporcionados no son válidos');
-                        } else {
-                            basicAlert(() => { }, 'error', 'Error de conexión', 'Hubo un problema de conexión');
-                        }
-                    } else {
-                        console.log(error);
                         basicAlert(() => { }, 'error', 'Error de conexión', 'Hubo un problema de conexión');
                     }
-                })
+                } else {
+                    console.log(error);
+                    basicAlert(() => { }, 'error', 'Error de conexión', 'Hubo un problema de conexión');
+                }
+            } finally {
+                dialogLoader.value = false; 
+            }
         }
 
 
