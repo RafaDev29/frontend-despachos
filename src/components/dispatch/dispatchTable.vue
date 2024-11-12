@@ -2,7 +2,7 @@
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
-                <tr class="bg-gray-100 text-gray-700">
+                <tr class="bg-gray-600 text-white uppercase text-sm leading-normal">
                     <th class="py-3 px-4 border-b text-start">Código</th>
                     <th class="py-3 px-4 border-b text-start">Documento del conductor</th>
                     <th class="py-3 px-4 border-b text-center">Registro Municipal</th>

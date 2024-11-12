@@ -16,7 +16,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { listDispatchApi } from '@/api/DispatchService';
-import RoutesTable from '@/components/dispatch/BusesTable.vue';
+import RoutesTable from '@/components/dispatch/dispatchTable.vue';
 import store from '@/store';
 
 export default {

@@ -1,8 +1,23 @@
 <template>
     <div class="overflow-x-auto">
+        <div class="flex justify-between items-center mb-4">
+            <label>
+                Filas por página:
+                <select v-model="rowsPerPage" class="border rounded px-2 py-1">
+                    <option :value="5">5</option>
+                    <option :value="10">10</option>
+                    <option :value="20">20</option>
+                    <option :value="routes.length">Todas</option>
+                </select>
+            </label>
+
+        </div>
+
+
+
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
-                <tr class="bg-gray-100 text-gray-700">
+                <tr class="bg-gray-600 text-white uppercase text-sm leading-normal">
                     <th class="py-3 px-4 border-b text-start">Código</th>
                     <th class="py-3 px-4 border-b text-start">Nombre</th>
                     <th class="py-3 px-4 border-b text-start">Documento</th>
@@ -10,28 +25,43 @@
                     <th class="py-3 px-4 border-b text-start">Tipo de licencia</th>
                     <th class="py-3 px-4 border-b text-start">Expiracion de lincenia</th>
                     <th class="py-3 px-4 border-b text-start">Puntos de licencia</th>
-                    
+
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(route) in routes" :key="route.code" class="hover:bg-gray-50 cursor-pointer">
-                    <td class="py-3 px-4 border-b text-start">{{ route.code || "-"}}</td>
+                <tr v-for="(route) in paginatedRoutes" :key="route.code" class="hover:bg-gray-50 cursor-pointer">
+                    <td class="py-3 px-4 border-b text-start">{{ route.code || "-" }}</td>
                     <td class="py-3 px-4 border-b text-start">{{ route.name }}</td>
                     <td class="py-3 px-4 border-b text-start">{{ route.identification_document }}</td>
-                    <td class="py-3 px-4 border-b text-start">{{ route.email || "-"}}</td>
+                    <td class="py-3 px-4 border-b text-start">{{ route.email || "-" }}</td>
                     <td class="py-3 px-4 border-b text-start">{{ route.license_type }}</td>
                     <td class="py-3 px-4 border-b text-start">{{ route.license_expiration_date }}</td>
                     <td class="py-3 px-4 border-b text-start">{{ route.license_points }}</td>
-                  
+
                 </tr>
             </tbody>
         </table>
+        <div class="flex justify-between items-center mt-4">
+            <button @click="prevPage" :disabled="currentPage === 1"
+                class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
+                Anterior
+            </button>
+            <div>
+                Página {{ currentPage }} de {{ totalPages }}
+            </div>
+            <button @click="nextPage" :disabled="currentPage === totalPages"
+                class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
+                Siguiente
+            </button>
+        </div>
+
+
     </div>
 </template>
 
 <script>
-//import { ref } from 'vue';
 
+import { ref, computed } from 'vue';
 export default {
     props: {
         routes: {
@@ -39,8 +69,36 @@ export default {
             required: true,
         },
     },
-    setup() {
-      
+    setup(props) {
+        const currentPage = ref(1);
+        const rowsPerPage = ref(5);
+
+        const paginatedRoutes = computed(() => {
+            const start = (currentPage.value - 1) * rowsPerPage.value;
+            const end = start + rowsPerPage.value;
+            return props.routes.slice(start, end);
+        });
+
+        const totalPages = computed(() => {
+            return Math.ceil(props.routes.length / rowsPerPage.value);
+        });
+
+        const prevPage = () => {
+            if (currentPage.value > 1) currentPage.value--;
+        };
+
+        const nextPage = () => {
+            if (currentPage.value < totalPages.value) currentPage.value++;
+        };
+
+        return {
+            currentPage,
+            rowsPerPage,
+            paginatedRoutes,
+            totalPages,
+            prevPage,
+            nextPage,
+        };
     },
 };
 </script>
