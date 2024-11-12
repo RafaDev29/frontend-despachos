@@ -12,3 +12,14 @@ export function listRoutesApi(token) {
         }
     )
 }
+
+
+export function createRoutesApi(token, payload) {
+    return axios.post(`${baseURL}routes`,payload,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    )
+}

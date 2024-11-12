@@ -24,9 +24,32 @@ const router = createRouter({
                     component: () => import("@/views/RoutesView.vue"),
                 },
 
+                {
+                    name: "stop",
+                    path: "stop",
+                    component: () => import("@/views/StopsView.vue"),
+                },
+                {
+                    name: "driver",
+                    path: "driver",
+                    component: () => import("@/views/DriversView.vue"),
+                },
+                {
+                    name:"bus",
+                    path:"bus",
+                    component:()=> import("@/views/BusesView.vue")
+                },
+                {
+                    name:"dispatch",
+                    path:"dispatch",
+                    component:()=> import("@/views/DispatchView.vue")
+                }
 
 
                 
+
+
+
             ]
         },
         {

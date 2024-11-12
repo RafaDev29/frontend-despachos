@@ -26,7 +26,7 @@ import { loginApi } from '@/api/LoginService';
 import { basicAlert } from '@/helpers/SweetAlert';
 import store from '@/store';
 import { useRouter } from 'vue-router';
-import FormLoginVue from "@/components/FormLogin.vue";
+import FormLoginVue from "@/components/login/FormLogin.vue";
 import { ref } from 'vue';
 
 export default ({

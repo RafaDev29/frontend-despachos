@@ -53,14 +53,20 @@ export default {
                 icon: "mdi mdi-map-marker"
             },
             {
-                to: "/office",
+                to: "/driver",
+                label: "Conductores",
+                children: [],
+                icon: "mdi mdi-card-account-details"
+            },
+            {
+                to: "/dispatch",
                 label: "Despachos",
                 children: [],
                 icon: "mdi mdi-office-building"
             },
             {
-                to: "/vehicle",
-                label: "Vehículos",
+                to: "/bus",
+                label: "Buses",
                 children: [],
                 icon: "mdi mdi-truck"
             }
