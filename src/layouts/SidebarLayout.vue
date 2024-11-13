@@ -34,12 +34,7 @@ export default {
     setup() {
         const navItems = ref([]);
         navItems.value = [
-            {
-                to: "/home",
-                label: "Inicio",
-                children: [],
-                icon: "mdi mdi-home"
-            },
+            
             {
                 to: "/route",
                 label: "Rutas",
