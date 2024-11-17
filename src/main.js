@@ -1,26 +1,19 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-import './index.css';
+import { createApp } from 'vue'
+import App from './App.vue'
+import './index.css'
+import vuetify from './plugins/vuetify'
+import { loadFonts } from './plugins/webfontloader'
 
-//Importamos las rutas
 import router from './router';
 
 // Importamos el store
-import store from './store'
-import 'vuetify/styles';
-import { createVuetify } from 'vuetify';
-import * as components from 'vuetify/components';
-import * as directives from 'vuetify/directives';
-import '@mdi/font/css/materialdesignicons.css'; // Importa los estilos CSS de los iconos
+import store from './store';
 
-const vuetify = createVuetify({
-    components,
-    directives,
-});
-
+loadFonts()
 // Llamar a la acción para inicializar el estado desde localStorage
 store.dispatch('initializeStateFromLocalStorage');
-
-const app = createApp(App);
-app.use(vuetify);
-app.use(router).use(store).mount('#app');
+createApp(App)
+  .use(vuetify)
+  .use(router)
+  .use(store)
+  .mount('#app')

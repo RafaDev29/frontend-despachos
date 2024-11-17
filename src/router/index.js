@@ -6,17 +6,13 @@ const router = createRouter({
     routes: [
         {
             meta: {
-                title: "Home",
+                title: "route",
                 requiresAuth: true
             },
             path: "/",
             component: () => import("@/layouts/MasterLayout.vue"),
             children: [
-                {
-                    name: "home",
-                    path: "home",
-                    component: () => import("@/views/HomeView.vue"),
-                },
+             
 
                 {
                     name: "route",
@@ -70,9 +66,9 @@ router.beforeEach((to, from, next) => {
         // Si la ruta requiere autenticación y el usuario no está autenticado, redirigir a la página de inicio de sesión
         next({ name: 'login' });
     } else if (to.name === 'login' && store.state.isAuthenticated) {
-        next({ name: 'home' });
+        next({ name: 'route' });
     } else if (to.path === '/' && store.state.isAuthenticated) {
-        next({ name: 'home' });
+        next({ name: 'route' });
     } else {
         next();
     }

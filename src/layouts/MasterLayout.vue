@@ -78,7 +78,7 @@ export default {
 }
 </script>
   
-<style lang="scss">
+<style >
 .sidebarLayout {
   position: sticky;
   top: 0;

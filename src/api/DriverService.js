@@ -1,10 +1,11 @@
-import axios from 'axios';
 
+
+import axiosInstance from "@/config/http.config"
 const baseURL = process.env.VUE_APP_BASE_URL;
 
 
 export function listDriversApi(token) {
-    return axios.get(`${baseURL}drivers`,
+    return axiosInstance.get(`${baseURL}drivers`,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -14,7 +15,7 @@ export function listDriversApi(token) {
 }
 
 export function createDriversApi(token, payload) {
-    return axios.post(`${baseURL}drivers`,payload,
+    return axiosInstance.post(`${baseURL}drivers`,payload,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -22,3 +23,15 @@ export function createDriversApi(token, payload) {
         }
     )
 }
+
+export function updateDriversApi(token, payload) {
+    return axiosInstance.post(`${baseURL}drivers/update`,payload,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    )
+}
+
+

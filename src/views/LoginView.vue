@@ -44,7 +44,7 @@ export default ({
                     store.commit('setUsuario', user.username);
                     store.commit('setToken', user.token); 
                     store.commit('setIsAuthenticated', true);
-                    router.push('/home');
+                    router.push('/route');
                 } else {
                     basicAlert(() => { }, 'warning', 'Credenciales incorrectas', 'Verifique su usuario y contraseña');
                 }
@@ -75,7 +75,7 @@ export default ({
 })
 </script>
 
-<style scoped lang="scss">
+<style scoped >
 .left {
     font-family: 'Poppins', sans-serif;
     overflow-y: auto;

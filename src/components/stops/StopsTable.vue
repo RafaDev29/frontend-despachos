@@ -1,95 +1,93 @@
 <template>
-    <div class="overflow-x-auto">
-        <div class="flex justify-between items-center mb-4">
-            <label>
-                Filas por página:
-                <select v-model="rowsPerPage" class="border rounded px-2 py-1">
-                    <option :value="5">5</option>
-                    <option :value="10">10</option>
-                    <option :value="20">20</option>
-                    <option :value="routes.length">Todas</option>
-                </select>
-            </label>
+  <v-card flat>
+    <v-text-field
+      v-model="search"
+      label="Buscar"
+      prepend-inner-icon="mdi-magnify"
+      variant="outlined"
+      hide-details
+      single-line
+    ></v-text-field>
 
-        </div>
+    <v-data-table :headers="headers" :items="filteredItems" :search="search" >
+      
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon small color="green" class="mr-4" @click="editItem(item)">
+          mdi-pencil
+        </v-icon>
+        <v-icon small color="red" @click="deleteItem(item)">
+          mdi-delete
+        </v-icon>
+       
+      </template>
+    </v-data-table>
 
-        <table class="min-w-full bg-white border border-gray-200">
-            <thead>
-                <tr class="bg-gray-600 text-white uppercase text-sm leading-normal">
-                    <th class="py-3 px-4 border-b text-start">Nombre</th>
-                    <th class="py-3 px-4 border-b text-center">Latitud</th>
-                    <th class="py-3 px-4 border-b text-center">Longitud</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(route) in paginatedRoutes" :key="route.code" class="hover:bg-gray-50 cursor-pointer">
-                    <td class="py-3 px-4 border-b text-start">{{ route.name }}</td>
-                    <td class="py-3 px-4 border-b text-center">{{ route.latitude }}</td>
-                    <td class="py-3 px-4 border-b text-center">{{ route.longitude }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="flex justify-between items-center mt-4">
-            <button @click="prevPage" :disabled="currentPage === 1"
-                class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
-                Anterior
-            </button>
-            <div>
-                Página {{ currentPage }} de {{ totalPages }}
-            </div>
-            <button @click="nextPage" :disabled="currentPage === totalPages"
-                class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
-                Siguiente
-            </button>
-        </div>
-    </div>
+  </v-card>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+
+import { ref, computed } from "vue";
 
 export default {
-    props: {
-        routes: {
-            type: Array,
-            required: true,
-        },
+  name: "DataTable",
+  props: {
+    items: {
+      type: Array,
+      required: true,
     },
-    setup(props) {
-        const currentPage = ref(1);
-        const rowsPerPage = ref(5);
+  },
+  emits: ["deleteItem"],
+  setup(props, { emit }) {
+    const search = ref("");
 
-        const paginatedRoutes = computed(() => {
-            const start = (currentPage.value - 1) * rowsPerPage.value;
-            const end = start + rowsPerPage.value;
-            return props.routes.slice(start, end);
-        });
+    const isEditFormVisible = ref(false);
 
-        const totalPages = computed(() => {
-            return Math.ceil(props.routes.length / rowsPerPage.value);
-        });
+    const headers = ref([
+      { align: "start", key: "name", sortable: false, title: "Código de cisterna" },
+      { key: "latitude", title: "Placa" },
+      { key: "longitude", title: "Capacidad" },
+      { key: "actions", title: "Acciones", sortable: false },
+    ]);
 
-        const prevPage = () => {
-            if (currentPage.value > 1) currentPage.value--;
-        };
+    const filteredItems = computed(() => {
+      if (!search.value) {
+        return props.items;
+      }
+      const searchTerm = search.value.toLowerCase();
+      return props.items.filter((item) =>
+        Object.values(item).some((val) =>
+          String(val).toLowerCase().includes(searchTerm)
+        )
+      );
+    });
 
-        const nextPage = () => {
-            if (currentPage.value < totalPages.value) currentPage.value++;
-        };
+    const deleteItem = (item) => {
+      
+      emit("deleteItem", item);
+    };
 
-        return {
-            currentPage,
-            rowsPerPage,
-            paginatedRoutes,
-            totalPages,
-            prevPage,
-            nextPage,
-        };
-    },
+    const editItem = (item) => {
+      emit("editItem", item)
+    }
+
+
+    const closeEditForm = () => {
+      isEditFormVisible.value = false;
+    };
+
+    return {
+      search,
+      headers,
+      filteredItems,
+      deleteItem,
+      closeEditForm,
+      editItem
+    };
+  },
 };
 </script>
 
 <style scoped>
-/* Estilos adicionales */
+/* Estilos específicos para el componente de la tabla */
 </style>

@@ -1,6 +1,5 @@
 <template>
     <div class="overflow-x-auto p-6 bg-gray-50">
-
         <div class="flex justify-between items-center mb-4">
             <label>
                 Filas por página:
@@ -11,7 +10,6 @@
                     <option :value="routes.length">Todas</option>
                 </select>
             </label>
-
         </div>
 
         <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-300">
@@ -20,6 +18,7 @@
                     <th class="py-3 px-6 text-left">Código</th>
                     <th class="py-3 px-6 text-left">Nombre</th>
                     <th class="py-3 px-6 text-center">Paradas</th>
+                    <th class="py-3 px-6 text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody class="text-gray-700 text-sm font-light">
@@ -28,8 +27,8 @@
                     <td class="py-3 px-6">{{ route.code }}</td>
                     <td class="py-3 px-6">{{ route.name }}</td>
                     <td class="py-3 px-6 text-center">
-                        <button @click="toggleExpanded(index)" class="text-yellow-400 font-semibold focus:outline-none">
-                            {{ expandedIndex === index ? 'Ocultar' : 'Ver' }} paradas
+                        <button @click="toggleExpanded(index)" class="text-yellow-400 font-semibold focus:outline-none " title="Ver paradas">
+                            {{ expandedIndex === index ? 'Ocultar' : '' }}  <i class="mdi mdi-eye"></i>
                         </button>
                         <!-- Lista de paradas desplegable -->
                         <div v-if="expandedIndex === index"
@@ -51,6 +50,13 @@
                             </table>
                         </div>
                     </td>
+                    <td class="py-3 px-6 text-center">
+                        <button @click="deleteRow(route.code)"
+                            class="text-red-500 hover:text-red-700 font-semibold focus:outline-none" title="Eliminar">
+                            <i class="mdi mdi-delete"></i>
+                          
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -60,9 +66,7 @@
                 class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
                 Anterior
             </button>
-            <div>
-                Página {{ currentPage }} de {{ totalPages }}
-            </div>
+            <div>Página {{ currentPage }} de {{ totalPages }}</div>
             <button @click="nextPage" :disabled="currentPage === totalPages"
                 class="px-3 py-1 bg-gray-200 rounded disabled:opacity-50">
                 Siguiente
@@ -81,11 +85,11 @@ export default {
             required: true,
         },
     },
-    setup(props) {
+    emits: ['deleteRow'],
+    setup(props, { emit }) {
         const expandedIndex = ref(null);
         const currentPage = ref(1);
         const rowsPerPage = ref(5);
-
 
         const toggleExpanded = (index) => {
             expandedIndex.value = expandedIndex.value === index ? null : index;
@@ -109,12 +113,22 @@ export default {
             if (currentPage.value < totalPages.value) currentPage.value++;
         };
 
-        return { expandedIndex, toggleExpanded,  currentPage,
+        // Método para eliminar una fila por código
+        const deleteRow = (code) => {
+            emit('deleteRow', code); // Emite el evento con el código de la ruta a eliminar
+        };
+
+        return {
+            expandedIndex,
+            toggleExpanded,
+            currentPage,
             rowsPerPage,
             paginatedRoutes,
             totalPages,
             prevPage,
-            nextPage };
+            nextPage,
+            deleteRow,
+        };
     },
 };
 </script>

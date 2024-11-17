@@ -72,120 +72,120 @@ export default {
     },
 }
 </script>
-<style lang="scss">
+<style>
 .sidebarComponent {
     max-height: 100vh;
     box-shadow: 1px 0px 5px 1px rgba(117, 117, 117, 0.09);
-    background-color: #ffffff; // Fondo blanco para un look limpio
+    background-color: #ffffff;
 }
 
 .open_close_sidebar i {
-    color: #ec2121; // Rojo para la flecha en su estado normal
+    color: #ec2121;
     transition: color 0.3s ease, transform 0.3s ease;
+}
 
-    &:hover {
-        color: #ffcd00; // Cambia a amarillo en hover
-    }
+.open_close_sidebar i:hover {
+    color: #ffcd00;
 }
 
 .sidebar {
-    background-color: #ffffff; // Fondo blanco
-    color: #333333; // Texto en gris oscuro
+    background-color: #ffffff;
+    color: #333333;
     overflow: hidden;
     transition: 300ms;
+}
 
-    .button-link span {
-        transition: all 0.3s;
-    }
+.sidebar .button-link span {
+    transition: all 0.3s;
+}
 
-    .btn-logout {
-        background-color: #ec2121; // Rojo para el botón de logout
-        color: #ffffff;
-        transition: all 0.5s;
+.sidebar .btn-logout {
+    background-color: #ec2121;
+    color: #ffffff;
+    transition: all 0.5s;
+}
 
-        &:hover {
-            background-color: #ffcd00; // Cambia a amarillo en hover
-            color: #333333;
-        }
-    }
+.sidebar .btn-logout:hover {
+    background-color: #ffcd00;
+    color: #333333;
+}
 
-    .button-link {
-        color: #333333;
-        font-weight: 500;
+.sidebar .button-link {
+    color: #333333;
+    font-weight: 500;
+}
 
-        &.router-link-exact-active {
-            color: #ec2121 !important; // Rojo para enlaces activos
+.sidebar .button-link.router-link-exact-active {
+    color: #ec2121 !important;
+}
 
-            i {
-                color: #ec2121 !important;
-            }
-        }
-    }
+.sidebar .button-link.router-link-exact-active i {
+    color: #ec2121 !important;
 }
 
 .side-bar-visible {
     width: 230px !important;
     min-width: 230px !important;
+}
 
-    .open_close_sidebar {
-        position: fixed;
-        top: 2.6rem;
-        left: 215px;
-        height: 25px;
-        z-index: 9999;
-        transition: 300ms;
-    }
+.side-bar-visible .open_close_sidebar {
+    position: fixed;
+    top: 2.6rem;
+    left: 215px;
+    height: 25px;
+    z-index: 9999;
+    transition: 300ms;
+}
 
-    .title_empresa {
-        display: block;
-        font-size: 17px;
-        font-weight: 500;
-        color: #ec2121; // Rojo para el título de la empresa
-    }
+.side-bar-visible .title_empresa {
+    display: block;
+    font-size: 17px;
+    font-weight: 500;
+    color: #ec2121;
 }
 
 .side-bar-close {
     width: 70px !important;
     min-width: 70px !important;
+}
 
-    .title_empresa {
-        display: none;
-    }
+.side-bar-close .title_empresa {
+    display: none;
+}
 
-    .open_close_sidebar {
-        position: fixed;
-        top: 2.6rem;
-        left: 55px;
-        height: 25px;
-        z-index: 9999;
-        transform: rotate(180deg);
-        color: #ec2121;
-        transition: 300ms;
+.side-bar-close .open_close_sidebar {
+    position: fixed;
+    top: 2.6rem;
+    left: 55px;
+    height: 25px;
+    z-index: 9999;
+    transform: rotate(180deg);
+    color: #ec2121;
+    transition: 300ms;
+}
 
-        &:hover {
-            color: #ffcd00; // Amarillo en hover
-        }
-    }
+.side-bar-close .open_close_sidebar:hover {
+    color: #ffcd00;
+}
 
-    .button-link {
-        justify-content: center;
+.side-bar-close .button-link {
+    justify-content: center;
+}
 
-        i {
-            color: #ffcd00; // Íconos en amarillo para dar contraste
-            font-size: 19px;
-        }
+.side-bar-close .button-link i {
+    color: #ffcd00;
+    font-size: 19px;
+}
 
-        &.router-link-exact-active {
-            color: #ec2121 !important;
+.side-bar-close .button-link.router-link-exact-active {
+    color: #ec2121 !important;
+}
 
-            i {
-                color: #ec2121 !important; // Ícono en rojo cuando está activo
-            }
-        }
-    }
+.side-bar-close .button-link.router-link-exact-active i {
+    color: #ec2121 !important;
+}
 
-    .button-link span {
-        display: none;
-    }
+.side-bar-close .button-link span {
+    display: none;
 }
 </style>

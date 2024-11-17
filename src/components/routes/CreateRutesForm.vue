@@ -1,30 +1,123 @@
 <template>
-    <v-dialog v-model="dialog" max-width="600px" persistent>
-        <v-card>
-            <span class="text-h5 mp-2 mb-4 text-center">Crear Nueva Ruta</span>
-            <v-card-text>
-                <v-form @submit.prevent="submitForm">
-                    <v-text-field v-model="form.code" label="Código" prepend-icon="mdi mdi-rename-box"
-                        required></v-text-field>
-                    <v-text-field v-model="form.name" label="Nombre" prepend-icon="mdi mdi-road-variant"
-                        required></v-text-field>
-
-                    <div v-for="(stop, index) in form.step_time_ids" :key="index" class="mb-4">
-                        <v-text-field v-model="stop.bus_stop" label="Parada" prepend-icon="mdi mdi-map"
-                            required></v-text-field>
-                        <v-text-field v-model="stop.time" label="Tiempo" type="number" prepend-icon="mdi-clock"
-                            required></v-text-field>
+    <div
+        v-if="dialog"
+        class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
+    >
+        <div class="bg-white rounded-lg shadow-lg max-w-lg w-full">
+            <div class="p-6 border-b">
+                <h3 class="text-xl font-semibold text-center text-gray-700">Crear Nueva Ruta</h3>
+            </div>
+            <div class="p-6">
+                <form @submit.prevent="submitForm" class="space-y-4">
+                    <!-- Código -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Código</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="mdi mdi-rename-box text-gray-400"></i>
+                            </span>
+                            <input
+                                type="text"
+                                v-model="form.code"
+                                class="w-full border border-gray-300 rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                placeholder="Código"
+                                required
+                            />
+                        </div>
                     </div>
-                    <v-btn text @click="addStop">Añadir Parada</v-btn>
 
-                    <v-card-actions class="justify-end">
-                        <v-btn text @click="closeDialog" color="#180c24">Cancelar</v-btn>
-                        <v-btn type="submit" color="red">Guardar</v-btn>
-                    </v-card-actions>
-                </v-form>
-            </v-card-text>
-        </v-card>
-    </v-dialog>
+                    <!-- Nombre -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="mdi mdi-road-variant text-gray-400"></i>
+                            </span>
+                            <input
+                                type="text"
+                                v-model="form.name"
+                                class="w-full border border-gray-300 rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                placeholder="Nombre de la ruta"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Paradas -->
+                    <div v-for="(stop, index) in form.step_time_ids" :key="index" class="space-y-2">
+                        <div class="flex items-center">
+                            <div class="flex-grow">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Parada {{ index + 1 }}</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="mdi mdi-map text-gray-400"></i>
+                                    </span>
+                                    <input
+                                        type="text"
+                                        v-model="stop.bus_stop"
+                                        class="w-full border border-gray-300 rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                        placeholder="Nombre de la parada"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                @click="removeStop(index)"
+                                class="ml-2 text-red-500 hover:text-red-700"
+                                title="Eliminar parada"
+                            >
+                                <i class="mdi mdi-delete"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tiempo (min)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="mdi mdi-clock text-gray-400"></i>
+                                </span>
+                                <input
+                                    type="number"
+                                    v-model="stop.time"
+                                    class="w-full border border-gray-300 rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    placeholder="Tiempo en minutos"
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón para añadir paradas -->
+                    <div class="flex justify-start mt-4">
+                        <button
+                            type="button"
+                            @click="addStop"
+                            class="bg-gray-200 text-gray-700 py-2 px-4 rounded hover:bg-gray-300"
+                        >
+                            Añadir Parada
+                        </button>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="flex justify-end mt-6 space-x-4">
+                        <button
+                            type="button"
+                            @click="closeDialog"
+                            class="bg-gray-200 text-gray-700 py-2 px-4 rounded hover:bg-gray-300"
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            type="submit"
+                            class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+                        >
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -52,6 +145,10 @@ export default {
             form.value.step_time_ids.push({ bus_stop: '', time: 0 });
         };
 
+        const removeStop = (index) => {
+            form.value.step_time_ids.splice(index, 1);
+        };
+
         const submitForm = async () => {
             try {
                 const token = store.state.token;
@@ -76,6 +173,7 @@ export default {
             form,
             closeDialog,
             addStop,
+            removeStop,
             submitForm
         };
     }

@@ -10,23 +10,30 @@
             </button>
         </div>
         <CreateStopsForm v-if="isCreateFormVisible" @close="closeCreateForm" @stopCreated="fetchRoutes" />
-        <RoutesTable :routes="routes" />
+        <StopsTable :items="items" @deleteItem="DeleteItem" @editItem="openEditForm" />
+
+        <!-- Modal de Edición -->
+        <EditStopModal v-if="isEditModalVisible" :route="selectedRoute" @close="closeEditForm"
+            @updateRoute="handleUpdateRoute" />
     </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
-import { listStopsApi } from '@/api/StopsService';
-import RoutesTable from '@/components/stops/StopsTable.vue';
+import { listStopsApi, deleteStopsApi, updateStopsApi } from '@/api/StopsService';
+import StopsTable from '@/components/stops/StopsTable.vue';
 import CreateStopsForm from '@/components/stops/CreateStopsForm.vue';
+import EditStopModal from '@/components/stops/EditStopModal.vue';
 import store from '@/store';
 
 export default {
-    components: { RoutesTable , CreateStopsForm},
+    components: { StopsTable, CreateStopsForm, EditStopModal },
     setup() {
-        const routes = ref([]);
-
+        const items = ref([]);
         const isCreateFormVisible = ref(false);
+        const isEditModalVisible = ref(false);
+        const selectedRoute = ref(null);
+
         const openCreateForm = () => {
             isCreateFormVisible.value = true;
         };
@@ -35,24 +42,68 @@ export default {
             isCreateFormVisible.value = false;
         };
 
+        const openEditForm = (route) => {
+            selectedRoute.value = { ...route };
+            isEditModalVisible.value = true;
+        };
+
+        const closeEditForm = () => {
+            isEditModalVisible.value = false;
+        };
+
         const fetchRoutes = async () => {
             try {
                 const token = store.state.token;
                 const response = await listStopsApi(token);
-                routes.value = response.data.data;
+                items.value = response.data.data;
             } catch (error) {
                 console.error('Error al obtener las rutas:', error);
+            }
+        };
+
+        const DeleteItem = async (name) => {
+            try {
+                const token = store.state.token;
+                const payload = [{ name }];
+
+                await deleteStopsApi(token, payload);
+                await fetchRoutes();
+            } catch (error) {
+                console.error('Error al eliminar la ruta:', error);
+            }
+        };
+
+        const handleUpdateRoute = async (updatedRoute) => {
+            try {
+                const token = store.state.token;
+                const payload = {
+                    name: updatedRoute.name,
+                    latitude: updatedRoute.latitude,
+                    longitude: updatedRoute.longitude,
+                };
+
+                await updateStopsApi(token, payload);
+                await fetchRoutes(); // Actualiza la lista de rutas después de guardar
+                closeEditForm();
+            } catch (error) {
+                console.error('Error al actualizar la ruta:', error);
             }
         };
 
         onMounted(fetchRoutes);
 
         return {
-            routes,
+            items,
             isCreateFormVisible,
+            isEditModalVisible,
+            selectedRoute,
             openCreateForm,
             closeCreateForm,
-            fetchRoutes
+            openEditForm,
+            closeEditForm,
+            fetchRoutes,
+            DeleteItem,
+            handleUpdateRoute,
         };
     },
 };

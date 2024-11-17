@@ -1,17 +1,13 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: '#006cac',
-        secondary: '#03f1fd',
-        tertiary: '#034289',
-      },
-    },
-    plugins: [],
-  }
-}
+ // tailwind.config.js
+ module.exports = {
+ 
+  purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+   darkMode: false, // or 'media' or 'class'
+   theme: {
+     extend: {},
+   },
+   variants: {
+     extend: {},
+   },
+   plugins: [],
+ }

@@ -73,7 +73,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style >
 i {
     transition: transform 0.3s ease;
     /* Agrega esta línea */

@@ -9,7 +9,6 @@
             </div>
             <div class="p-4">
                 <form @submit.prevent="submitForm">
-                    <!-- Input de archivo -->
                     <label class="block text-sm font-medium text-gray-700 mb-2">Seleccionar archivo Excel</label>
                     <input
                         type="file"
@@ -19,18 +18,23 @@
                         required
                     />
 
+                    <!-- Cargando indicador -->
+                    <div v-if="isLoading" class="text-center text-gray-500 mt-4">Cargando...</div>
+
                     <!-- Botones -->
                     <div class="flex justify-end mt-4 space-x-2">
                         <button
                             type="button"
                             @click="closeDialog"
                             class="px-4 py-2 text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
+                            :disabled="isLoading"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+                            :disabled="isLoading"
                         >
                             Subir
                         </button>
@@ -45,19 +49,21 @@
 import { ref } from 'vue';
 import { createDispatchApi } from '@/api/DispatchService';
 import store from '@/store';
+import Swal from 'sweetalert2';
 
 export default {
     emits: ['close', 'fileUploaded'],
     setup(props, { emit }) {
         const dialog = ref(true);
-        const file = ref(null); // Campo para almacenar el archivo seleccionado
+        const file = ref(null);
+        const isLoading = ref(false);
 
         const closeDialog = () => {
             emit('close');
         };
 
         const handleFileChange = (event) => {
-            file.value = event.target.files[0]; // Obtiene el archivo del input
+            file.value = event.target.files[0];
         };
 
         const submitForm = async () => {
@@ -66,22 +72,38 @@ export default {
                 return;
             }
 
+            isLoading.value = true;
+
             try {
                 const token = store.state.token;
                 const formData = new FormData();
-                formData.append('file', file.value); // Agrega el archivo con la clave 'file'
+                formData.append('file', file.value);
 
-                await createDispatchApi(token, formData); // Usa el método adecuado para enviar el FormData
+                await createDispatchApi(token, formData);
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Archivo subido con éxito!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
                 emit('fileUploaded');
                 closeDialog();
             } catch (error) {
                 console.error('Error al subir el archivo:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al subir el archivo',
+                    text: 'Hubo un problema al subir el archivo. Intenta nuevamente.'
+                });
+            } finally {
+                isLoading.value = false;
             }
         };
 
         return {
             dialog,
             file,
+            isLoading,
             closeDialog,
             handleFileChange,
             submitForm,

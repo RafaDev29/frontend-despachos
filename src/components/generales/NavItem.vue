@@ -37,7 +37,7 @@ export default ({
     }
 })
 </script>
-<style lang="scss">
+<style >
 .active {
     background-color: #e5e5e5;
     font-weight: bold;
